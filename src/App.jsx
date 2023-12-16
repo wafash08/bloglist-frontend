@@ -10,7 +10,6 @@ function LoginForm({ onLogin }) {
 	const handleSubmit = async e => {
 		e.preventDefault();
 		const loggedInUser = await login({ username, password });
-		console.log('loggedInUser >> ', loggedInUser);
 		onLogin(loggedInUser);
 	};
 
@@ -48,15 +47,32 @@ function App() {
 	const [user, setUser] = useState(null);
 	const [blogs, setBlogs] = useState([]);
 
+	const LS_BLOGLIST_USER = 'loggedBloglistUser';
+
 	useEffect(() => {
 		blogService.getAll().then(blogs => setBlogs(blogs));
 	}, []);
 
+	useEffect(() => {
+		const loggedInUser = window.localStorage.getItem(LS_BLOGLIST_USER);
+		if (loggedInUser) {
+			const user = JSON.parse(loggedInUser);
+			setUser(user);
+		}
+	}, []);
+
 	const handleLogin = loggedInUser => {
 		setUser(loggedInUser);
+		window.localStorage.setItem(
+			LS_BLOGLIST_USER,
+			JSON.stringify(loggedInUser)
+		);
 	};
 
-	console.log('user >> ', user);
+	const handleLogout = () => {
+		setUser(null);
+		window.localStorage.removeItem(LS_BLOGLIST_USER);
+	};
 
 	return (
 		<div>
@@ -65,7 +81,12 @@ function App() {
 			) : (
 				<>
 					<h2>blogs</h2>
-					<h3>{user.name} logged in</h3>
+					<p>
+						<span>{user.name} logged in</span>
+						<button type='button' onClick={handleLogout}>
+							logout
+						</button>
+					</p>
 					{blogs.map(blog => (
 						<Blog key={blog.id} blog={blog} />
 					))}
