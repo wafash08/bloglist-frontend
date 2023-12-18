@@ -3,6 +3,29 @@ import Blog from './components/Blog';
 import { create, getAll, setToken } from './services/blogs';
 import { login } from './services/auth';
 
+function Togglable({ buttonLable, children }) {
+	const [visible, setVisible] = useState(false);
+
+	const hideWhenVisible = { display: visible ? 'none' : 'block' };
+	const showWhenVisible = { display: visible ? 'block' : 'none' };
+
+	return (
+		<div>
+			<div style={hideWhenVisible}>
+				<button type='button' onClick={() => setVisible(true)}>
+					{buttonLable}
+				</button>
+			</div>
+			<div style={showWhenVisible}>
+				{children}
+				<button type='button' onClick={() => setVisible(false)}>
+					cancel
+				</button>
+			</div>
+		</div>
+	);
+}
+
 function Notification({ notification }) {
 	const { message, type } = notification;
 	const baseStyles = {
@@ -21,6 +44,10 @@ function Notification({ notification }) {
 		}
 		case 'error': {
 			styles = { ...baseStyles, color: 'red' };
+			break;
+		}
+		default: {
+			styles = baseStyles;
 			break;
 		}
 	}
@@ -119,7 +146,7 @@ function LoginForm({ onLogin }) {
 	);
 }
 
-function App() {
+export default function App() {
 	const [user, setUser] = useState(null);
 	const [blogs, setBlogs] = useState([]);
 	const [notification, setNotification] = useState({
@@ -209,7 +236,9 @@ function App() {
 							logout
 						</button>
 					</p>
-					<CreateNewBlogForm onCreateNewBlog={createNewBlog} />
+					<Togglable buttonLable={'create new blog'}>
+						<CreateNewBlogForm onCreateNewBlog={createNewBlog} />
+					</Togglable>
 					{blogs.map(blog => (
 						<Blog key={blog.id} blog={blog} />
 					))}
@@ -218,5 +247,3 @@ function App() {
 		</div>
 	);
 }
-
-export default App;
