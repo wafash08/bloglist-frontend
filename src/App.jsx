@@ -4,9 +4,10 @@ import LoginForm from './components/login-form';
 import Togglable from './components/togglable';
 import CreateNewBlogForm from './components/create-new-blog-form';
 import Bloglist from './components/bloglist';
-import { create, getAll, setToken } from './services/blogs';
+import { addLikeTo, create, getAll, remove, setToken } from './services/blogs';
 import { login } from './services/auth';
 
+export const LS_BLOGLIST_USER = 'loggedBloglistUser';
 export default function App() {
 	const [user, setUser] = useState(null);
 	const [blogs, setBlogs] = useState([]);
@@ -14,8 +15,6 @@ export default function App() {
 		message: null,
 		type: null,
 	});
-
-	const LS_BLOGLIST_USER = 'loggedBloglistUser';
 
 	useEffect(() => {
 		async function getAllBlogs() {
@@ -89,6 +88,39 @@ export default function App() {
 		}
 	};
 
+	const updateLikesTo = async (id, updatedBlog) => {
+		try {
+			const result = await addLikeTo(id, updatedBlog);
+			const blogsAfterUpdateLikes = blogs.map(b => {
+				return b.id === result.id ? { ...b, result } : b;
+			});
+			setBlogs(blogsAfterUpdateLikes);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const removeBlogBy = async id => {
+		try {
+			const blogToRemove = blogs.find(b => b.id === id);
+			if (!blogToRemove) {
+				return;
+			}
+			await remove(id);
+			setBlogs(blogs.filter(b => b.id !== id));
+		} catch (error) {
+			setNotification({
+				message:
+					'blog you are trying to remove has already removed from the server',
+				type: 'error',
+			});
+			setTimeout(() => {
+				setNotification({ message: null });
+			}, 3000);
+			setBlogs(blogs.filter(b => b.id !== id));
+		}
+	};
+
 	return (
 		<div>
 			{user === null ? <h2>Log in to application</h2> : <h2>blogs</h2>}
@@ -106,7 +138,11 @@ export default function App() {
 					<Togglable buttonLable={'create new blog'}>
 						<CreateNewBlogForm onCreateNewBlog={createNewBlog} />
 					</Togglable>
-					<Bloglist blogs={blogs} />
+					<Bloglist
+						blogs={blogs}
+						onRemoveBlogBy={removeBlogBy}
+						onUpdateLikesTo={updateLikesTo}
+					/>
 				</>
 			)}
 		</div>

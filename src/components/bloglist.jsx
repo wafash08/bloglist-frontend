@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { addLikeTo } from '../services/blogs';
+import { addLikeTo, remove } from '../services/blogs';
+import { LS_BLOGLIST_USER } from '../App';
 
-export default function Bloglist({ blogs }) {
-	console.log('blogs >> ', blogs);
+export default function Bloglist({ blogs, onRemoveBlogBy, onUpdateLikesTo }) {
 	const [sortBy, setSortBy] = useState('asc');
 
 	let sortedBlogs =
@@ -34,15 +34,25 @@ export default function Bloglist({ blogs }) {
 				sort by likes {sortBy === 'asc' ? '⬆️' : '⬇️'}
 			</button>
 			{sortedBlogs.map(blog => (
-				<Blog key={blog.id} blog={blog} />
+				<Blog
+					key={blog.id}
+					blog={blog}
+					onRemoveBlogBy={onRemoveBlogBy}
+					onUpdateLikesTo={onUpdateLikesTo}
+				/>
 			))}
 		</>
 	);
 }
 
-function Blog({ blog }) {
+function Blog({ blog, onRemoveBlogBy, onUpdateLikesTo }) {
 	const [showDetails, setShowDetails] = useState(false);
 	const [like, setLike] = useState(blog.likes);
+	const [userFromLocalStorage, _] = useState(() =>
+		JSON.parse(window.localStorage.getItem(LS_BLOGLIST_USER))
+	);
+
+	const showDeleteButton = blog.user.name === userFromLocalStorage.name;
 
 	const styles = {
 		paddingTop: 10,
@@ -59,7 +69,17 @@ function Blog({ blog }) {
 			...blog,
 			likes: like + 1,
 		};
-		await addLikeTo(blog.id, updatedBlog);
+		onUpdateLikesTo(blog.id, updatedBlog);
+	};
+
+	const handleRemoveBlogBy = async () => {
+		const hasConfirmation = window.confirm(
+			`Remove blog ${blog.title} by ${blog.author}?`
+		);
+		if (!hasConfirmation) {
+			return;
+		}
+		onRemoveBlogBy(blog.id);
 	};
 
 	return (
@@ -82,6 +102,11 @@ function Blog({ blog }) {
 						</button>
 					</p>
 					<p>{blog.user.name}</p>
+					{showDeleteButton ? (
+						<button type='button' onClick={handleRemoveBlogBy}>
+							remove
+						</button>
+					) : null}
 				</div>
 			) : null}
 		</div>

@@ -26,3 +26,11 @@ export async function addLikeTo(id, blog) {
 	const response = await request.data;
 	return response.data;
 }
+
+export async function remove(id) {
+	const request = await axios.delete(`${baseUrl}/${id}`, {
+		headers: { Authorization: token },
+	});
+	const response = request.data;
+	return response.data;
+}
