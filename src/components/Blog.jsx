@@ -12,6 +12,8 @@ export default function Blog({ blog }) {
 		marginBottom: 5,
 	};
 
+	console.log('blog >> ', blog);
+
 	return (
 		<div style={styles}>
 			<div>

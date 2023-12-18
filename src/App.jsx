@@ -63,7 +63,13 @@ export default function App() {
 	const createNewBlog = async blog => {
 		try {
 			const newBlog = await create(blog);
-			setBlogs([...blogs, newBlog]);
+			const newBlogWithUser = {
+				...newBlog,
+				user: {
+					name: user.name,
+				},
+			};
+			setBlogs([...blogs, newBlogWithUser]);
 			setNotification({
 				message: `a new blog ${newBlog.title} by ${newBlog.author} added`,
 				type: 'success',
