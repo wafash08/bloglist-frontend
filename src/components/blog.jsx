@@ -4,7 +4,7 @@ export default function Blog({ blog, onRemoveBlogBy, onUpdateLikesTo, user }) {
 	const [showDetails, setShowDetails] = useState(false);
 	const [like, setLike] = useState(blog.likes);
 
-	const showDeleteButton = blog.user.name === user.name;
+	const showDeleteButton = blog.user.username === user.username;
 
 	const styles = {
 		paddingTop: 10,

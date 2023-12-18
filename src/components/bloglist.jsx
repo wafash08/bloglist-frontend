@@ -44,7 +44,7 @@ export default function Bloglist({ blogs, onRemoveBlogBy, onUpdateLikesTo }) {
 					blog={blog}
 					onRemoveBlogBy={onRemoveBlogBy}
 					onUpdateLikesTo={onUpdateLikesTo}
-					user={userFromLocalStorage}
+					user={userFromLocalStorage[0]}
 				/>
 			))}
 		</>
