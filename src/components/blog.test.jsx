@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { test, expect } from '@jest/globals';
+import { test, expect, jest } from '@jest/globals';
 import userEvent from '@testing-library/user-event';
 import Blog from './Blog';
 
@@ -32,7 +32,6 @@ test('renders content', () => {
 
 test("shows blog's URL and number of likes", async () => {
 	render(<Blog blog={blog} user={user} />);
-
 	const userEventSetup = userEvent.setup();
 	const button = screen.getByText('view');
 	await userEventSetup.click(button);
@@ -41,4 +40,17 @@ test("shows blog's URL and number of likes", async () => {
 	const likes = screen.getByText(blog.likes);
 	expect(url).toBeDefined();
 	expect(likes).toBeDefined();
+});
+
+test('ensures that like button is clicked twice', async () => {
+	const mockHandler = jest.fn();
+	render(<Blog blog={blog} user={user} onUpdateLikesTo={mockHandler} />);
+	const userEventSetup = userEvent.setup();
+	const button = screen.getByText('view');
+	await userEventSetup.click(button);
+	const likeButton = screen.getByText('like');
+	await userEventSetup.click(likeButton);
+	await userEventSetup.click(likeButton);
+
+	expect(mockHandler.mock.calls).toHaveLength(2);
 });
