@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { addLikeTo } from '../services/blogs';
 
 export default function Blog({ blog }) {
 	const [showDetails, setShowDetails] = useState(false);
+	const [like, setLike] = useState(blog.likes);
 
 	const styles = {
 		paddingTop: 10,
@@ -12,7 +14,14 @@ export default function Blog({ blog }) {
 		marginBottom: 5,
 	};
 
-	console.log('blog >> ', blog);
+	const handleLike = async () => {
+		setLike(like + 1);
+		const updatedBlog = {
+			...blog,
+			likes: like + 1,
+		};
+		await addLikeTo(blog.id, updatedBlog);
+	};
 
 	return (
 		<div style={styles}>
@@ -28,8 +37,10 @@ export default function Blog({ blog }) {
 				<div>
 					<p>{blog.url}</p>
 					<p>
-						<span>{blog.likes}</span>
-						<button type='button'>like</button>
+						<span>{like}</span>
+						<button type='button' onClick={handleLike}>
+							like
+						</button>
 					</p>
 					<p>{blog.user.name}</p>
 				</div>

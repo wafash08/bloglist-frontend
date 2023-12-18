@@ -20,3 +20,9 @@ export async function create(newBlog) {
 	const response = await request.data;
 	return response.data;
 }
+
+export async function addLikeTo(id, blog) {
+	const request = await axios.put(`${baseUrl}/${id}`, blog);
+	const response = await request.data;
+	return response.data;
+}
