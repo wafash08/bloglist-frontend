@@ -1,5 +1,6 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import { useState } from 'react';
-import { addLikeTo, remove } from '../services/blogs';
+import PropTypes from 'prop-types';
 import { LS_BLOGLIST_USER } from '../App';
 
 export default function Bloglist({ blogs, onRemoveBlogBy, onUpdateLikesTo }) {
@@ -45,14 +46,20 @@ export default function Bloglist({ blogs, onRemoveBlogBy, onUpdateLikesTo }) {
 	);
 }
 
+Bloglist.propTypes = {
+	blogs: PropTypes.array.isRequired,
+	onRemoveBlogBy: PropTypes.func.isRequired,
+	onUpdateLikesTo: PropTypes.func.isRequired,
+};
+
 function Blog({ blog, onRemoveBlogBy, onUpdateLikesTo }) {
 	const [showDetails, setShowDetails] = useState(false);
 	const [like, setLike] = useState(blog.likes);
-	const [userFromLocalStorage, _] = useState(() =>
+	const userFromLocalStorage = useState(() =>
 		JSON.parse(window.localStorage.getItem(LS_BLOGLIST_USER))
 	);
 
-	const showDeleteButton = blog.user.name === userFromLocalStorage.name;
+	const showDeleteButton = blog.user.name === userFromLocalStorage[0].name;
 
 	const styles = {
 		paddingTop: 10,

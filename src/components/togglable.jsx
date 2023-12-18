@@ -31,4 +31,6 @@ const Togglable = forwardRef(({ buttonLable, children }, ref) => {
 	);
 });
 
+Togglable.displayName = 'Togglable';
+
 export default Togglable;
