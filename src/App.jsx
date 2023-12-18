@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import Blog from './components/Blog';
 import Notification from './components/notification';
 import LoginForm from './components/login-form';
 import Togglable from './components/togglable';
 import CreateNewBlogForm from './components/create-new-blog-form';
+import Bloglist from './components/bloglist';
 import { create, getAll, setToken } from './services/blogs';
 import { login } from './services/auth';
 
@@ -106,9 +106,7 @@ export default function App() {
 					<Togglable buttonLable={'create new blog'}>
 						<CreateNewBlogForm onCreateNewBlog={createNewBlog} />
 					</Togglable>
-					{blogs.map(blog => (
-						<Blog key={blog.id} blog={blog} />
-					))}
+					<Bloglist blogs={blogs} />
 				</>
 			)}
 		</div>

@@ -1,7 +1,46 @@
 import { useState } from 'react';
 import { addLikeTo } from '../services/blogs';
 
-export default function Blog({ blog }) {
+export default function Bloglist({ blogs }) {
+	console.log('blogs >> ', blogs);
+	const [sortBy, setSortBy] = useState('asc');
+
+	let sortedBlogs =
+		sortBy === 'asc'
+			? blogs.sort((a, b) => {
+					return b.likes - a.likes;
+			  })
+			: blogs.sort((a, b) => {
+					return a.likes - b.likes;
+			  });
+
+	const sortByLikes = () => {
+		switch (sortBy) {
+			case 'asc': {
+				setSortBy('desc');
+				break;
+			}
+
+			case 'desc': {
+				setSortBy('asc');
+				break;
+			}
+		}
+	};
+
+	return (
+		<>
+			<button type='button' onClick={sortByLikes}>
+				sort by likes {sortBy === 'asc' ? '⬆️' : '⬇️'}
+			</button>
+			{sortedBlogs.map(blog => (
+				<Blog key={blog.id} blog={blog} />
+			))}
+		</>
+	);
+}
+
+function Blog({ blog }) {
 	const [showDetails, setShowDetails] = useState(false);
 	const [like, setLike] = useState(blog.likes);
 
