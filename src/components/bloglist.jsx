@@ -1,10 +1,14 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import Blog from './Blog';
 import { LS_BLOGLIST_USER } from '../App';
 
 export default function Bloglist({ blogs, onRemoveBlogBy, onUpdateLikesTo }) {
 	const [sortBy, setSortBy] = useState('asc');
+	const userFromLocalStorage = useState(() =>
+		JSON.parse(window.localStorage.getItem(LS_BLOGLIST_USER))
+	);
 
 	let sortedBlogs =
 		sortBy === 'asc'
@@ -40,6 +44,7 @@ export default function Bloglist({ blogs, onRemoveBlogBy, onUpdateLikesTo }) {
 					blog={blog}
 					onRemoveBlogBy={onRemoveBlogBy}
 					onUpdateLikesTo={onUpdateLikesTo}
+					user={userFromLocalStorage}
 				/>
 			))}
 		</>
@@ -51,71 +56,3 @@ Bloglist.propTypes = {
 	onRemoveBlogBy: PropTypes.func.isRequired,
 	onUpdateLikesTo: PropTypes.func.isRequired,
 };
-
-function Blog({ blog, onRemoveBlogBy, onUpdateLikesTo }) {
-	const [showDetails, setShowDetails] = useState(false);
-	const [like, setLike] = useState(blog.likes);
-	const userFromLocalStorage = useState(() =>
-		JSON.parse(window.localStorage.getItem(LS_BLOGLIST_USER))
-	);
-
-	const showDeleteButton = blog.user.name === userFromLocalStorage[0].name;
-
-	const styles = {
-		paddingTop: 10,
-		paddingBottom: 10,
-		paddingLeft: 10,
-		border: 'solid',
-		borderWidth: 1,
-		marginBottom: 5,
-	};
-
-	const handleLike = async () => {
-		setLike(like + 1);
-		const updatedBlog = {
-			...blog,
-			likes: like + 1,
-		};
-		onUpdateLikesTo(blog.id, updatedBlog);
-	};
-
-	const handleRemoveBlogBy = async () => {
-		const hasConfirmation = window.confirm(
-			`Remove blog ${blog.title} by ${blog.author}?`
-		);
-		if (!hasConfirmation) {
-			return;
-		}
-		onRemoveBlogBy(blog.id);
-	};
-
-	return (
-		<div style={styles}>
-			<div>
-				<span>
-					{blog.title} {blog.author}
-				</span>
-				<button type='button' onClick={() => setShowDetails(!showDetails)}>
-					{showDetails ? 'hide' : 'view'}
-				</button>
-			</div>
-			{showDetails ? (
-				<div>
-					<p>{blog.url}</p>
-					<p>
-						<span>{like}</span>
-						<button type='button' onClick={handleLike}>
-							like
-						</button>
-					</p>
-					<p>{blog.user.name}</p>
-					{showDeleteButton ? (
-						<button type='button' onClick={handleRemoveBlogBy}>
-							remove
-						</button>
-					) : null}
-				</div>
-			) : null}
-		</div>
-	);
-}
