@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Notification from './components/notification';
 import LoginForm from './components/login-form';
 import Togglable from './components/togglable';
@@ -15,6 +15,7 @@ export default function App() {
 		message: null,
 		type: null,
 	});
+	const newBlogFormRef = useRef(null);
 
 	useEffect(() => {
 		async function getAllBlogs() {
@@ -61,6 +62,7 @@ export default function App() {
 
 	const createNewBlog = async blog => {
 		try {
+			newBlogFormRef.current.toggleVisibility();
 			const newBlog = await create(blog);
 			const newBlogWithUser = {
 				...newBlog,
@@ -135,7 +137,7 @@ export default function App() {
 							logout
 						</button>
 					</p>
-					<Togglable buttonLable={'create new blog'}>
+					<Togglable buttonLable={'create new blog'} ref={newBlogFormRef}>
 						<CreateNewBlogForm onCreateNewBlog={createNewBlog} />
 					</Togglable>
 					<Bloglist
