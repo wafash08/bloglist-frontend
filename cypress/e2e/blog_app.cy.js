@@ -74,5 +74,21 @@ describe('Blog app', function () {
 				'CSS Variables for React Devs Josh Comeau'
 			);
 		});
+
+		it('users can like a blog', function () {
+			cy.get('[data-test="togglable-button"]').click();
+
+			cy.get('[data-test="title"]').type('CSS Variables for React Devs');
+			cy.get('[data-test="author"]').type('Josh Comeau');
+			cy.get('[data-test="url"]').type(
+				'https://www.joshwcomeau.com/css/css-variables-for-react-devs/'
+			);
+			cy.get('[data-test="create"]').click();
+
+			cy.get('[data-test="view_hide_button"').click();
+			cy.get('[data-test="like_button"').as('like_button');
+			cy.get('@like_button').click();
+			cy.get('@like_button').parent().find('span').should('contain', '1');
+		});
 	});
 });
