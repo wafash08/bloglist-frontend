@@ -50,7 +50,7 @@ describe('Blog app', function () {
 		});
 	});
 
-	describe.only('When logged in', function () {
+	describe('When logged in', function () {
 		beforeEach(function () {
 			cy.login({ username: 'johndalton', password: '1234' });
 		});
@@ -96,7 +96,7 @@ describe('Blog app', function () {
 			});
 		});
 
-		describe('there are users', function () {
+		describe.only('there are users', function () {
 			beforeEach(function () {
 				// john logs out
 				cy.get('[data-test="logout_button"]').click();
@@ -126,6 +126,41 @@ describe('Blog app', function () {
 				// john can not see the remove button
 				cy.get('[data-test="view_hide_button"').click();
 				cy.get('[data-test="remove_button"').should('not.exist');
+			});
+
+			it('check that the blogs are ordered according to likes', function () {
+				cy.createBlog({
+					title: 'Common Beginner Mistakes with React',
+					author: 'Josh Comeau',
+					url: 'https://www.joshwcomeau.com/react/common-beginner-mistakes/',
+				});
+				cy.createBlog({
+					title: 'CSS Variables for React Devs',
+					author: 'Josh Comeau',
+					url: 'https://www.joshwcomeau.com/css/css-variables-for-react-devs/',
+				});
+
+				cy.contains('CSS Variables for React Devs')
+					.parent()
+					.find('[data-test="view_hide_button"]')
+					.click();
+				cy.get('[data-test="like_button"]').click();
+
+				cy.get('[data-test="sortbylikes_button"]').click(); // sort asc (least to most)
+				cy.get('[data-test="blog"]')
+					.eq(0)
+					.should('contain', 'Common Beginner Mistakes with React');
+				cy.get('[data-test="blog"]')
+					.eq(1)
+					.should('contain', 'CSS Variables for React Devs');
+
+				cy.get('[data-test="sortbylikes_button"]').click(); // sort desc (most to least)
+				cy.get('[data-test="blog"]')
+					.eq(0)
+					.should('contain', 'CSS Variables for React Devs');
+				cy.get('[data-test="blog"]')
+					.eq(1)
+					.should('contain', 'Common Beginner Mistakes with React');
 			});
 		});
 	});
