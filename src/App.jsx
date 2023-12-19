@@ -68,6 +68,7 @@ export default function App() {
 				...newBlog,
 				user: {
 					name: user.name,
+					username: user.username,
 				},
 			};
 			setBlogs([...blogs, newBlogWithUser]);

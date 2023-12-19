@@ -57,7 +57,11 @@ export default function Blog({ blog, onRemoveBlogBy, onUpdateLikesTo, user }) {
 					</p>
 					<p>{blog.user.name}</p>
 					{showDeleteButton ? (
-						<button type='button' onClick={handleRemoveBlogBy}>
+						<button
+							type='button'
+							onClick={handleRemoveBlogBy}
+							data-test='remove_button'
+						>
 							remove
 						</button>
 					) : null}

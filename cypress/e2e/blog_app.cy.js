@@ -44,13 +44,12 @@ describe('Blog app', function () {
 		});
 	});
 
-	describe('When logged in', function () {
+	describe.only('When logged in', function () {
 		beforeEach(function () {
 			cy.request('POST', 'http://localhost:8080/api/login', {
 				username: 'johndalton',
 				password: '1234',
 			}).then(response => {
-				console.log('response.body >> ', response.body);
 				localStorage.setItem(
 					'loggedBloglistUser',
 					JSON.stringify(response.body.data)
@@ -75,20 +74,32 @@ describe('Blog app', function () {
 			);
 		});
 
-		it('users can like a blog', function () {
-			cy.get('[data-test="togglable-button"]').click();
+		describe('there is a blog', function () {
+			beforeEach(function () {
+				cy.get('[data-test="togglable-button"]').click();
 
-			cy.get('[data-test="title"]').type('CSS Variables for React Devs');
-			cy.get('[data-test="author"]').type('Josh Comeau');
-			cy.get('[data-test="url"]').type(
-				'https://www.joshwcomeau.com/css/css-variables-for-react-devs/'
-			);
-			cy.get('[data-test="create"]').click();
+				cy.get('[data-test="title"]').type('CSS Variables for React Devs');
+				cy.get('[data-test="author"]').type('Josh Comeau');
+				cy.get('[data-test="url"]').type(
+					'https://www.joshwcomeau.com/css/css-variables-for-react-devs/'
+				);
+				cy.get('[data-test="create"]').click();
+			});
 
-			cy.get('[data-test="view_hide_button"').click();
-			cy.get('[data-test="like_button"').as('like_button');
-			cy.get('@like_button').click();
-			cy.get('@like_button').parent().find('span').should('contain', '1');
+			it('users can like a blog', function () {
+				cy.get('[data-test="view_hide_button"').click();
+				cy.get('[data-test="like_button"').as('like_button');
+				cy.get('@like_button').click();
+				cy.get('@like_button').parent().find('span').should('contain', '1');
+			});
+
+			it('users can remove their blog', function () {
+				cy.get('[data-test="view_hide_button"').click();
+				cy.get('[data-test="remove_button"').click();
+				cy.contains('CSS Variables for React Devs Josh Comeau').should(
+					'not.exist'
+				);
+			});
 		});
 	});
 });
