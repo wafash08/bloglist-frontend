@@ -25,11 +25,19 @@ describe('Blog app', function () {
 			cy.contains('John Dalton logged in');
 		});
 
-		it('fails with wrong credentials', function () {
+		it('fails with wrong credentials and shows notification with red color', function () {
 			cy.get('[data-cy="username"]').type('wrongusername');
 			cy.get('[data-cy="password"]').type('wrongpassword');
 			cy.get('[data-cy="login"]').click();
-			cy.contains('username or password is wrong');
+
+			// cy.get('[data-cy="alert"]').should(
+			// 	'contain',
+			// 	'username or password is wrong'
+			// );
+			// cy.get('[data-cy="alert"]').should('have.css', 'color', 'rgb(255, 0, 0)');
+			cy.get('[data-cy="alert"]')
+				.should('contain', 'username or password is wrong')
+				.and('have.css', 'color', 'rgb(255, 0, 0)');
 		});
 	});
 });

@@ -27,5 +27,9 @@ export default function Notification({ notification }) {
 	if (message === null) {
 		return null;
 	}
-	return <p style={styles}>{message}</p>;
+	return (
+		<p style={styles} data-cy='alert'>
+			{message}
+		</p>
+	);
 }
