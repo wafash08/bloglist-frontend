@@ -20,6 +20,7 @@ export default function LoginForm({ onLogin }) {
 						id='username'
 						value={username}
 						onChange={e => setUsername(e.target.value)}
+						data-cy='username'
 					/>
 				</div>
 				<div>
@@ -30,9 +31,12 @@ export default function LoginForm({ onLogin }) {
 						id='password'
 						value={password}
 						onChange={e => setPassword(e.target.value)}
+						data-cy='password'
 					/>
 				</div>
-				<button type='submit'>login</button>
+				<button type='submit' data-cy='login'>
+					login
+				</button>
 			</form>
 		</>
 	);
