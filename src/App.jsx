@@ -134,7 +134,11 @@ export default function App() {
 				<>
 					<p>
 						<span>{user.name} logged in</span>
-						<button type='button' onClick={handleLogout}>
+						<button
+							type='button'
+							onClick={handleLogout}
+							data-test='logout_button'
+						>
 							logout
 						</button>
 					</p>

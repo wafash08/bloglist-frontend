@@ -20,7 +20,7 @@ const Togglable = forwardRef(({ buttonLable, children }, ref) => {
 				<button
 					type='button'
 					onClick={toggleVisibility}
-					data-test='togglable-button'
+					data-test='togglable_button'
 				>
 					{buttonLable}
 				</button>
