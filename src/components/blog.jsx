@@ -35,11 +35,14 @@ export default function Blog({ blog, onRemoveBlogBy, onUpdateLikesTo, user }) {
 	};
 
 	return (
-		<div style={styles} className='blog'>
+		<li style={styles} data-test='blog'>
 			<div>
-				<span>{blog.title}</span>
-				<span>{blog.author}</span>
-				<button type='button' onClick={() => setShowDetails(!showDetails)}>
+				<span>{blog.title}</span> <span>{blog.author}</span>
+				<button
+					type='button'
+					onClick={() => setShowDetails(!showDetails)}
+					data-test='view_hide_button'
+				>
 					{showDetails ? 'hide' : 'view'}
 				</button>
 			</div>
@@ -48,7 +51,7 @@ export default function Blog({ blog, onRemoveBlogBy, onUpdateLikesTo, user }) {
 					<p>{blog.url}</p>
 					<p>
 						<span>{like}</span>
-						<button type='button' onClick={handleLike}>
+						<button type='button' onClick={handleLike} data-test='like_button'>
 							like
 						</button>
 					</p>
@@ -60,6 +63,6 @@ export default function Blog({ blog, onRemoveBlogBy, onUpdateLikesTo, user }) {
 					) : null}
 				</div>
 			) : null}
-		</div>
+		</li>
 	);
 }

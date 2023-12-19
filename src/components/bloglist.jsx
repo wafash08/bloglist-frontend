@@ -12,12 +12,8 @@ export default function Bloglist({ blogs, onRemoveBlogBy, onUpdateLikesTo }) {
 
 	let sortedBlogs =
 		sortBy === 'asc'
-			? blogs.sort((a, b) => {
-					return b.likes - a.likes;
-			  })
-			: blogs.sort((a, b) => {
-					return a.likes - b.likes;
-			  });
+			? blogs.sort((a, b) => b.likes - a.likes)
+			: blogs.sort((a, b) => a.likes - b.likes);
 
 	const sortByLikes = () => {
 		switch (sortBy) {
@@ -38,15 +34,17 @@ export default function Bloglist({ blogs, onRemoveBlogBy, onUpdateLikesTo }) {
 			<button type='button' onClick={sortByLikes}>
 				sort by likes {sortBy === 'asc' ? '⬆️' : '⬇️'}
 			</button>
-			{sortedBlogs.map(blog => (
-				<Blog
-					key={blog.id}
-					blog={blog}
-					onRemoveBlogBy={onRemoveBlogBy}
-					onUpdateLikesTo={onUpdateLikesTo}
-					user={userFromLocalStorage[0]}
-				/>
-			))}
+			<ul className='bloglist'>
+				{sortedBlogs.map(blog => (
+					<Blog
+						key={blog.id}
+						blog={blog}
+						onRemoveBlogBy={onRemoveBlogBy}
+						onUpdateLikesTo={onUpdateLikesTo}
+						user={userFromLocalStorage[0]}
+					/>
+				))}
+			</ul>
 		</>
 	);
 }

@@ -23,6 +23,7 @@ export default function CreateNewBlogForm({ onCreateNewBlog }) {
 					name='title'
 					value={blog.title}
 					onChange={e => setBlog({ ...blog, title: e.target.value })}
+					data-test='title'
 				/>
 			</div>
 			<div>
@@ -33,6 +34,7 @@ export default function CreateNewBlogForm({ onCreateNewBlog }) {
 					name='author'
 					value={blog.author}
 					onChange={e => setBlog({ ...blog, author: e.target.value })}
+					data-test='author'
 				/>
 			</div>
 			<div>
@@ -43,9 +45,12 @@ export default function CreateNewBlogForm({ onCreateNewBlog }) {
 					name='url'
 					value={blog.url}
 					onChange={e => setBlog({ ...blog, url: e.target.value })}
+					data-test='url'
 				/>
 			</div>
-			<button type='submit'>create</button>
+			<button type='submit' data-test='create'>
+				create
+			</button>
 		</form>
 	);
 }
